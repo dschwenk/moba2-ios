@@ -18,11 +18,13 @@ class ViewController: UITableViewController {
     
     override func viewDidAppear(animated: Bool) {
         
-        print("ViewController - viewDidAppear", terminator: "");
-        print("call loadData")
+        print("ViewController - viewDidAppear");
+
         // load data from core data
         loadData();
     }
+    
+
     
     
     override func viewDidLoad() {
@@ -35,6 +37,7 @@ class ViewController: UITableViewController {
      * Function to laod data from core data
      */
     func loadData(){
+        print("call loadData")
         
         // create request
         let request = NSFetchRequest(entityName: "ToDoEntity");
@@ -47,29 +50,48 @@ class ViewController: UITableViewController {
             // catch error - do something
         }
     
-        // debug output if any data was loaded
-        if daten.count > 0 {
-            print("loaded data:", terminator: "");
-            print(daten.count, terminator: "");
-        } else {
-            print("no data loaded", terminator: "");
+        // if there is any data reload table view
+        if(daten.count >= 1){
+            tableView.reloadData();
         }
         
-        tableView.reloadData();
     }
     
     
-
+    func showString(){
+        // http://stackoverflow.com/questions/28532926/if-no-table-view-results-display-no-results-on-screen
+        
+        // create label
+        var noDataLabel: UILabel = UILabel(frame: CGRectMake(0, 0, self.tableView.bounds.size.width, self.tableView.bounds.size.height))
+        //noDataLabel.text = "keine Einträge :)"
+        noDataLabel.textColor = UIColor(red: 22.0/255.0, green: 106.0/255.0, blue: 176.0/255.0, alpha: 1.0)
+        noDataLabel.textAlignment = NSTextAlignment.Center
+        self.tableView.backgroundView = noDataLabel
+        
+        // set label text
+        if(daten.count == 0){
+            noDataLabel.text = "keine Einträge :)"
+        }
+        else {
+            noDataLabel.text = ""
+        }
+    }
     
+    
+    
+    
+
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         // #warning Potentially incomplete method implementation.
         // Return the number of sections.
+        showString()
         return 1
     }
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete method implementation.
         // Return the number of rows in the section.
+
         return daten.count;
     }
     
@@ -82,8 +104,9 @@ class ViewController: UITableViewController {
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("cell_id", forIndexPath: indexPath)
-        //cell.textLabel?.text = "\(daten[indexPath.row].todo_title)";
+        // set to do tile as text
         cell.textLabel!.text = daten[indexPath.row].todo_title;
+        
         return cell;
     }
     

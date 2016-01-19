@@ -20,16 +20,32 @@ class AddToDoViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-
         // Do any additional setup after loading the view.
+        
+        // do not allow dates in past
+        outlet_datepicker.minimumDate = NSDate()
     }
 
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
     
 
+    @IBAction func resignKeyboard(sender: AnyObject) {
+        if(sender as! NSObject == outlet_textfield_title){
+            sender.resignFirstResponder()
+            outlet_textfield_desc.becomeFirstResponder()
+        }
+        else {
+            sender.resignFirstResponder()
+         }
+    }
+    
+    
+    
+    
     /*
     // MARK: - Navigation
 
@@ -60,15 +76,15 @@ class AddToDoViewController: UIViewController {
             todo_item.setValue(outlet_textfield_desc.text, forKey: "todo_desc");
             todo_item.setValue(outlet_datepicker.date, forKey: "todo_date");
             
-            // reset user input in GUI
-            outlet_textfield_title.text = ""
-            outlet_textfield_desc.text = ""
-            outlet_datepicker.date = NSDate()
-            
             // show alert
             let alertController = UIAlertController(title: "", message: "saved ToDo", preferredStyle: .Alert);
             alertController.addAction(UIAlertAction(title: "Ok", style: .Cancel, handler: nil))
             self.presentViewController(alertController, animated: true, completion: nil);
+            
+            // reset user input in GUI
+            outlet_textfield_title.text = ""
+            outlet_textfield_desc.text = ""
+            outlet_datepicker.date = NSDate()
         }
         
    }
