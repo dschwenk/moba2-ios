@@ -24,12 +24,16 @@ class ViewController: UITableViewController {
         loadData();
     }
     
-
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
+    }
+    
+    
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
     }
     
     
@@ -54,11 +58,13 @@ class ViewController: UITableViewController {
         if(daten.count >= 1){
             tableView.reloadData();
         }
-        
     }
     
     
-    func showString(){
+    /**
+     * Function to set text of label if there are no entries in table view
+     */
+    func setNoEntryLabel(){
         // http://stackoverflow.com/questions/28532926/if-no-table-view-results-display-no-results-on-screen
         
         // create label
@@ -84,37 +90,22 @@ class ViewController: UITableViewController {
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         // #warning Potentially incomplete method implementation.
         // Return the number of sections.
-        showString()
+        setNoEntryLabel()
         return 1
     }
     
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete method implementation.
         // Return the number of rows in the section.
-
         return daten.count;
     }
     
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
-    
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("cell_id", forIndexPath: indexPath)
         // set to do tile as text
         cell.textLabel!.text = daten[indexPath.row].todo_title;
-        
         return cell;
-    }
-    
-    
-    // Override to support conditional editing of the table view.
-    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return NO if you do not want the specified item to be editable.
-        return true;
     }
     
     
@@ -129,7 +120,6 @@ class ViewController: UITableViewController {
             } catch _ {
             };
             
-            
             let request = NSFetchRequest(entityName: "ToDoEntity");
             do {
                 try  daten = context!.executeFetchRequest(request) as! [ToDoEntity];
@@ -137,7 +127,7 @@ class ViewController: UITableViewController {
             catch {
                 // do somethin
             }
-            
+            // delete row from table view
             tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
         }
     }
